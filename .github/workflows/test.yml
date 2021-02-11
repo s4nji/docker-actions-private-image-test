@@ -1,0 +1,36 @@
+name: "Test"
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      # Login to DockerHub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Prove that we have access to the private docker image in this context
+      - name: Test Pull Image
+        run: |
+          docker pull s4nji/alpine:latest
+          echo
+          docker images
+          echo
+          docker rmi s4nji/alpine:latest
+
+      # Run private docker action with private docker image
+      - name: Test Pull Image in Docker Action
+        uses: ./ci/actions/test-action/

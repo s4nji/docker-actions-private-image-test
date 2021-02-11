@@ -1,0 +1,7 @@
+name: Test Docker Action with Private Docker Image
+description: Prints a simple command using a private image
+runs:
+  using: "docker"
+  image: "docker://s4nji/alpine:latest"
+  args:
+    - ./ci/actions/test-action/cmd.sh
